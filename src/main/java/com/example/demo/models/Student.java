@@ -1,15 +1,22 @@
 package com.example.demo.models;
 
-import jakarta.annotation.Nullable;
-//All
+import jakarta.validation.constraints.NotBlank;
 
 public class Student {
     private String studentId;
+    @NotBlank(message = "Student name cannot be blank")
     private String name;
+    @NotBlank(message = "Student address cannot be blank")
     private String address;
+    @NotBlank(message = "Student email cannot be blank")
     private String email;
-    @Nullable
     private Course course;
+
+    public Student(String name, String address, String email) {
+        this.name = name;
+        this.address = address;
+        this.email = email;
+    }
 
     public String getStudentId() {
         return studentId;
@@ -43,18 +50,11 @@ public class Student {
         this.email = email;
     }
 
-    @Nullable
     public Course getCourse() {
         return course;
     }
 
-    public void setCourse(@Nullable Course course) {
+    public void setCourse(Course course) {
         this.course = course;
-    }
-
-    public Student(String name, String address, String email) {
-        this.name = name;
-        this.address = address;
-        this.email = email;
     }
 }

@@ -1,10 +1,15 @@
 package com.example.demo.models;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.PositiveOrZero;
+
 import java.util.UUID;
 
 public class Teacher {
     private String teacherId;
+    @NotBlank(message = "Teacher name cannot be blank")
     private String name;
+    @PositiveOrZero(message = "Salary cannot be negative")
     private double salary;
 
     public Teacher(String name, double salary) {

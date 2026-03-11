@@ -1,8 +1,11 @@
 package com.example.demo.services;
 
+import com.example.demo.Exceptions.CourseNotFoundException;
+import com.example.demo.Exceptions.InvalidInputException;
 import com.example.demo.models.Course;
 import com.example.demo.models.Teacher;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -11,37 +14,38 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-//sdgsdg
 @Service
 public class CourseService {
 
     private final Map<String, Course> courseMap = new HashMap<>();
+    private final TeacherService teacherService;
 
     @Autowired
-    private TeacherService teacherService; // To fetch teachers
+    public CourseService(@Lazy TeacherService teacherService) {
+        this.teacherService = teacherService;
+    }
 
     public Course createCourse(String name, double price) {
-        if (name == null || name.isEmpty()) {
-            throw new IllegalArgumentException("Course name cannot be empty");
+        if (name == null || name.isBlank()) {
+            throw new InvalidInputException("Course name cannot be empty");
         }
-        if (price < 0) {
-            throw new IllegalArgumentException("Price cannot be negative");
+        if (price <= 0) {
+            throw new InvalidInputException("Price must be positive");
         }
         String courseId = UUID.randomUUID().toString();
         Course course = new Course(name, price);
         course.setCourseId(courseId);
-        course.setMoney_earned(0.0);
         courseMap.put(courseId, course);
         return course;
     }
 
     public Course getCourseById(String courseId) {
         if (courseId == null) {
-            throw new IllegalArgumentException("Course ID cannot be null");
+            throw new InvalidInputException("Course ID cannot be null");
         }
         Course course = courseMap.get(courseId);
         if (course == null) {
-            throw new IllegalArgumentException("Course not found with ID: " + courseId);
+            throw new CourseNotFoundException("Course not found with ID: " + courseId);
         }
         return course;
     }
@@ -50,23 +54,18 @@ public class CourseService {
         return new ArrayList<>(courseMap.values());
     }
 
-    public void updateCourse(String courseId, String newName, double newPrice) {
+    public void updateCourse(String courseId, String newName, Double newPrice) {
         Course course = getCourseById(courseId);
-        if (newName != null && !newName.isEmpty()) {
+        if (newName != null && !newName.isBlank()) {
             course.setName(newName);
         }
-        if (newPrice >= 0) {
+        if (newPrice != null && newPrice > 0) {
             course.setPrice(newPrice);
         }
     }
 
     public void deleteCourse(String courseId) {
-        if (courseId == null) {
-            throw new IllegalArgumentException("Course ID cannot be null");
-        }
-        if (!courseMap.containsKey(courseId)) {
-            throw new IllegalArgumentException("Course not found with ID: " + courseId);
-        }
+        getCourseById(courseId);
         courseMap.remove(courseId);
     }
 
@@ -77,7 +76,7 @@ public class CourseService {
     }
 
     public List<Course> getCoursesByTeacher(String teacherId) {
-        teacherService.getTeacherById(teacherId); // Validate teacher exists
+        teacherService.getTeacherById(teacherId);
         List<Course> teacherCourses = new ArrayList<>();
         for (Course course : courseMap.values()) {
             if (course.getTeacher() != null && course.getTeacher().getTeacherId().equals(teacherId)) {
@@ -85,5 +84,18 @@ public class CourseService {
             }
         }
         return teacherCourses;
+    }
+
+    public double getCourseProfit(String courseId) {
+        Course course = getCourseById(courseId);
+        double earned = course.getMoneyEarned();
+        double salary = course.getTeacher() != null ? course.getTeacher().getSalary() : 0;
+        return earned - salary;
+    }
+
+    public double getTotalProfit() {
+        double totalEarned = courseMap.values().stream().mapToDouble(Course::getMoneyEarned).sum();
+        double totalSalaries = teacherService.getAllTeachers().stream().mapToDouble(Teacher::getSalary).sum();
+        return totalEarned - totalSalaries;
     }
 }
