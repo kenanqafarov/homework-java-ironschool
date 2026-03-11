@@ -5,15 +5,22 @@ import jakarta.validation.constraints.PositiveOrZero;
 
 import java.util.UUID;
 
+/**
+ * Represents a teacher employed by the school.
+ * ID is auto-generated upon construction using UUID.
+ */
 public class Teacher {
+
     private String teacherId;
+
     @NotBlank(message = "Teacher name cannot be blank")
     private String name;
+
     @PositiveOrZero(message = "Salary cannot be negative")
     private double salary;
 
     public Teacher(String name, double salary) {
-        this.teacherId = UUID.randomUUID().toString();
+        this.teacherId = UUID.randomUUID().toString(); // Auto-generate ID in constructor
         this.name = name;
         this.salary = salary;
     }

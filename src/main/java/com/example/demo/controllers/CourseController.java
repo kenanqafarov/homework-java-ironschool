@@ -9,6 +9,20 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * REST controller for Course-related operations.
+ *
+ * Endpoints:
+ *   GET    /courses                          - List all courses
+ *   POST   /courses                          - Create a new course
+ *   GET    /courses/{courseId}               - Get a course by ID
+ *   PUT    /courses/{courseId}               - Update a course
+ *   DELETE /courses/{courseId}               - Delete a course
+ *   POST   /courses/{courseId}/assign-teacher/{teacherId} - Assign a teacher to a course
+ *   GET    /courses/teacher/{teacherId}      - Get all courses by a teacher
+ *   GET    /courses/profit/{courseId}        - Get profit for a specific course
+ *   GET    /courses/total-profit             - Get total profit across all courses
+ */
 @RestController
 @RequestMapping("/courses")
 public class CourseController {

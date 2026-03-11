@@ -1,18 +1,32 @@
 package com.example.demo.models;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
+import java.util.UUID;
+
+/**
+ * Represents a student enrolled in the school.
+ * ID is auto-generated upon construction using UUID.
+ */
 public class Student {
+
     private String studentId;
+
     @NotBlank(message = "Student name cannot be blank")
     private String name;
+
     @NotBlank(message = "Student address cannot be blank")
     private String address;
+
     @NotBlank(message = "Student email cannot be blank")
+    @Email(message = "Student email must be a valid email address")
     private String email;
+
     private Course course;
 
     public Student(String name, String address, String email) {
+        this.studentId = UUID.randomUUID().toString(); // Auto-generate ID in constructor
         this.name = name;
         this.address = address;
         this.email = email;

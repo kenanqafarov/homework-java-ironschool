@@ -3,16 +3,28 @@ package com.example.demo.models;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 
+import java.util.UUID;
+
+/**
+ * Represents a course offered by the school.
+ * ID is auto-generated upon construction using UUID.
+ */
 public class Course {
+
     private String courseId;
+
     @NotBlank(message = "Course name cannot be blank")
     private String name;
+
     @Positive(message = "Price must be positive")
     private double price;
+
     private double moneyEarned;
+
     private Teacher teacher;
 
     public Course(String name, double price) {
+        this.courseId = UUID.randomUUID().toString(); // Auto-generate ID in constructor
         this.name = name;
         this.price = price;
         this.moneyEarned = 0.0;

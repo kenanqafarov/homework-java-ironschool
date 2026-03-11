@@ -9,6 +9,16 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * REST controller for Teacher-related operations.
+ *
+ * Endpoints:
+ *   POST   /teachers              - Create a new teacher
+ *   GET    /teachers/{teacherId}  - Get a teacher by ID
+ *   GET    /teachers              - List all teachers
+ *   PUT    /teachers/{teacherId}  - Update a teacher
+ *   DELETE /teachers/{teacherId}  - Delete a teacher
+ */
 @RestController
 @RequestMapping("/teachers")
 public class TeacherController {

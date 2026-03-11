@@ -10,6 +10,19 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * REST controller for Student-related operations.
+ *
+ * Endpoints:
+ *   POST   /students                                - Create a new student
+ *   GET    /students/{studentId}                    - Get a student by ID
+ *   PUT    /students/{studentId}                    - Update a student
+ *   DELETE /students/{studentId}                    - Delete a student
+ *   POST   /students/{studentId}/enroll/{courseId}  - Enroll student in a course
+ *   DELETE /students/{studentId}/unenroll           - Unenroll student from their course
+ *   GET    /students/course/{courseId}              - Get all students enrolled in a course
+ *   GET    /students/{studentId}/course             - Get the course a student is enrolled in
+ */
 @RestController
 @RequestMapping("/students")
 public class StudentController {
